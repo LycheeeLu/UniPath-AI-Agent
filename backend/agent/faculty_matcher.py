@@ -1,4 +1,4 @@
-from services.bedrock_service import call_bedrock
+from backend.services.bedrock_service import call_bedrock
 import requests
 from bs4 import BeautifulSoup
 

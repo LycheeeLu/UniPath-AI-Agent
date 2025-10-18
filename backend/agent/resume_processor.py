@@ -1,6 +1,6 @@
 import json, tempfile
-from services.s3_service import upload_file
-from services.bedrock_service import call_bedrock
+from backend.services.s3_service import upload_file
+from backend.services.bedrock_service import call_bedrock
 
 def process_resume(file):
     contents = file.file.read()

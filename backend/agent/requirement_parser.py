@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from services.bedrock_service import call_bedrock
+from backend.services.bedrock_service import call_bedrock
 
 def parse_requirements(url):
     res = requests.get(url, timeout=10)

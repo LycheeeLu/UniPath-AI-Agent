@@ -1,9 +1,9 @@
 from fastapi import FastAPI, UploadFile
-from agent.resume_processor import process_resume
-from agent.program_finder import find_programs
-from agent.requirement_parser import parse_requirements
-from agent.faculty_matcher import match_faculty
-from agent.tracker import generate_tracker
+from backend.agent.resume_processor import process_resume
+from backend.agent.program_finder import find_programs
+from backend.agent.requirement_parser import parse_requirements
+from backend.agent.faculty_matcher import match_faculty
+from backend.agent.tracker import generate_tracker
 
 app = FastAPI()
 
