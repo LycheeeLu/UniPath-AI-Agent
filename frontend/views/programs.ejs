@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Recommended Programs</title></head>
+<body>
+  <h2>Your Resume Summary</h2>
+  <p><%= resume.summary %></p>
+
+  <h3>Recommended Programs</h3>
+  <ul>
+    <% resume.recommended_programs?.forEach(p => { %>
+      <li><a href="<%= p %>" target="_blank"><%= p %></a></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
