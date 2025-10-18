@@ -17,12 +17,32 @@ else:
     bedrock = boto3.client("bedrock-runtime", region_name=region)
 
 def call_bedrock(prompt: str) -> str:
-    body = {"inputText": prompt}
+    """
+        cross-region inference profile
+    """
+    body = {
+            "messages": [
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": 1000,
+            "anthropic_version": "bedrock-2023-05-31"
+        }
+
     response = bedrock.invoke_model(
         modelId=model_id,
         contentType="application/json",
         accept="application/json",
         body=json.dumps(body)
     )
-    out = json.loads(response["body"].read())
-    return out["results"][0]["outputText"]
+
+    out = json.loads(response["body"].read().decode("utf-8"))
+
+        # Try Claude 4.x format
+    if "output" in out and "message" in out["output"]:
+        text = out["output"]["message"]["content"][0]["text"]
+        return text.strip()
+
+
+     # Otherwise, return raw response
+    else:
+        return str(out)
