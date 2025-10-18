@@ -9,7 +9,7 @@ app = FastAPI()
 
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile):
-    return process_resume(file)
+    return await process_resume(file)
 
 @app.get("/recommend-programs")
 def recommend_programs(field: str):
