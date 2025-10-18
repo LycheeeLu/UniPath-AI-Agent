@@ -5,13 +5,23 @@ load_dotenv()
 region = os.getenv("AWS_REGION", "us-east-1")
 model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-sonnet")
 
-bedrock = boto3.client("bedrock-runtime", region_name=region)
+
+if os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"):
+    bedrock = boto3.client(
+        "bedrock-runtime",
+        region_name=region,
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+    )
+else:
+    bedrock = boto3.client("bedrock-runtime", region_name=region)
 
 def call_bedrock(prompt: str) -> str:
     body = {"inputText": prompt}
     response = bedrock.invoke_model(
         modelId=model_id,
         contentType="application/json",
+        accept="application/json",
         body=json.dumps(body)
     )
     out = json.loads(response["body"].read())
