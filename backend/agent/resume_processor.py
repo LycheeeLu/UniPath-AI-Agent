@@ -4,6 +4,7 @@ import fitz #PyMuPDF
 from dotenv import load_dotenv
 from backend.services.s3_service import upload_file
 from backend.services.bedrock_service import call_bedrock
+from backend.agent.program_finder import recommend_programs
 
 
 
@@ -37,21 +38,34 @@ async def process_resume(file):
 
 
     # use bedrock to summarize
-    prompt = (
-        "Please summarize the following university application resume and "
-        "suggest 5 suitable academic programs with reasoning:\n\n"
-        f"{resume_text}"
-    )
+    prompt = f"""
+    You are an expert academic advisor.
+    Analyze the following resume text and extract structured information in JSON format:
+
+    Resume:
+    {resume_text}
+
+    Return JSON like this:
+    {{
+    "education": ["Bachelor of Science in Computer Science, NYU, 2023"],
+    "skills": ["Python", "Machine Learning", "Data Analysis"],
+    "experience": ["Research Assistant at XYZ Lab", "Software Engineer Intern at Google"],
+    "interests": ["AI Safety", "Human-Computer Interaction"]
+    }}
+    """
 
     # let Bedrock extract resume text
     # for future optimization, we can use Textract OCR to extract texts
     summary = call_bedrock(prompt)
 
-    # 5️ return results
+    programs = recommend_programs(summary)
+
+
     return {
         "status": "success",
         "user_id": user_id,
         "file": file.filename,
         "s3_path": s3_path,
-        "summary": summary
+        "summary": summary,
+        "program_recommendations": programs
     }
