@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile
 from backend.agent.resume_processor import process_resume
-from backend.agent.program_finder import recommend_programs
+from backend.agent.program_finder import find_programs
 from backend.agent.requirement_parser import parse_requirements
 from backend.agent.faculty_matcher import match_faculty
 from backend.agent.tracker import generate_tracker
@@ -12,8 +12,8 @@ async def upload_resume(file: UploadFile):
     return await process_resume(file)
 
 @app.get("/recommend-programs")
-def recommend_programs(field: str):
-    return recommend_programs(field)
+def find_programs(field: str):
+    return find_programs(field)
 
 @app.get("/parse-requirements")
 def requirements(url: str):

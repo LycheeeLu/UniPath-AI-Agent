@@ -4,7 +4,7 @@ import fitz #PyMuPDF
 from dotenv import load_dotenv
 from backend.services.s3_service import upload_file
 from backend.services.bedrock_service import call_bedrock
-from backend.agent.program_finder import recommend_programs
+from backend.agent.program_finder import find_programs
 
 
 
@@ -58,7 +58,7 @@ async def process_resume(file):
     # for future optimization, we can use Textract OCR to extract texts
     summary = call_bedrock(prompt)
 
-    programs = recommend_programs(summary)
+    programs = find_programs(summary)
 
 
     return {
