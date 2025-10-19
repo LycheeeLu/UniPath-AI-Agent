@@ -1,65 +1,57 @@
 import os
-import tempfile
 import boto3
+import fitz #PyMuPDF
 from dotenv import load_dotenv
-from backend.services.db_service import add_user_item
+from backend.services.s3_service import upload_file
 from backend.services.bedrock_service import call_bedrock
 
-load_dotenv()
 
-# initialize s3
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-    region_name=os.getenv("AWS_REGION")
-)
-
-S3_BUCKET = os.getenv("S3_BUCKET")
 
 
 async def process_resume(file):
     """
     upload resume/sv to S3 → store metadata to DynamoDB → call on Bedrock to summarize → return results
     """
+    user_id = "demo_user"
+    filename = file.filename
+    local_path = f"uploads/{filename}"
 
     # 1 temp file storage
-    with tempfile.NamedTemporaryFile(delete=False) as tmp:
-        tmp.write(await file.read())
-        tmp_path = tmp.name
+    os.makedirs("uploads", exist_ok=True)
+    with open(local_path, "wb") as f:
+        f.write(await file.read())
+
 
     # 2 upoad to S3
-    s3_key = f"uploads/{file.filename}"
-    s3.upload_file(tmp_path, S3_BUCKET, s3_key)
-    s3_url = f"s3://{S3_BUCKET}/{s3_key}"
-    print(f"✅ Uploaded to {s3_url}")
+    s3_path = upload_file(local_path, f"uploads/{filename}")
 
-    # remove temp file
-    os.remove(tmp_path)
 
-    # 3️ store metadata to DynamoDB
-    user_id = "demo_user"
-    add_user_item(user_id, file.filename, s3_url)
+    # extract texts from PDF
+    resume_text = ""
+    with fitz.open(local_path) as pdf:
+        for page in pdf:
+            resume_text += page.get_text()
+
+    if not resume_text.strip():
+        resume_text = "This resume appears empty or unscannable."
+
 
     # use bedrock to summarize
-    summary_prompt = f"""
-    You are an admissions assistant AI.
-    Summarize the key academic and professional strengths in this resume.
-    Highlight likely target programs (CS, AI, Business, etc.) and offer short reasons.
-    """
+    prompt = (
+        "Please summarize the following university application resume and "
+        "suggest 5 suitable academic programs with reasoning:\n\n"
+        f"{resume_text}"
+    )
 
     # let Bedrock extract resume text
     # for future optimization, we can use Textract OCR to extract texts
-    resume_text = f"Resume file name: {file.filename}"
-    prompt = f"{summary_prompt}\n\nResume:\n{resume_text}"
-
-    bedrock_response = call_bedrock(prompt)
+    summary = call_bedrock(prompt)
 
     # 5️ return results
     return {
         "status": "success",
         "user_id": user_id,
         "file": file.filename,
-        "s3_path": s3_url,
-        "summary": bedrock_response
+        "s3_path": s3_path,
+        "summary": summary
     }
