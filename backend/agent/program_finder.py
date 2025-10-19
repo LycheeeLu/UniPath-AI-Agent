@@ -1,17 +1,18 @@
 import requests, os
 from backend.services.bedrock_service import call_bedrock
-
 from dotenv import load_dotenv
 load_dotenv()
+
+key = os.getenv("GOOGLE_API_KEY")
+cx = os.getenv("GOOGLE_CSE_ID")
 
 
 def find_programs(field):
     """
     google custom search API relevant masters degree program
     """
-    key = os.getenv("GOOGLE_API_KEY")
-    cx = os.getenv("GOOGLE_CSE_ID")
-    query = f"{field} master's program site:.edu"
+
+    query = f"{field} graduate programs university"
 
     res = requests.get(
         "https://www.googleapis.com/customsearch/v1",
@@ -19,6 +20,7 @@ def find_programs(field):
     )
     data = res.json()
     items = data.get("items", [])
+    print("DEBUG Google Search data:", data)
 
     results = []
     for item in items[:3]:
@@ -28,3 +30,4 @@ def find_programs(field):
             "snippet": item.get("snippet")
         })
     return {"recommended_programs": results}
+
