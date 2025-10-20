@@ -8,8 +8,59 @@
     <div v-if="loading" class="loading">⏳ Processing your resume...</div>
 
     <div v-if="result">
-      <h2>🧠 Summary</h2>
-      <pre>{{ result.summary }}</pre>
+<!--       <h2>🧠 Summary</h2>
+      <pre>{{ result.summary }}</pre> -->
+      <!-- 🧠 Summary Section -->
+<div v-if="result?.summary" class="summary-section">
+  <h2>🧠 Applicant Background Summary</h2>
+
+  <!-- Field -->
+  <div class="summary-block">
+    <h3>🎓 Field</h3>
+    <p>{{ result.summary.field }}</p>
+  </div>
+
+  <!-- Education -->
+  <div class="summary-block" v-if="result.summary.education?.length">
+    <h3> 📖 Education</h3>
+    <ul>
+      <li v-for="(edu, i) in result.summary.education" :key="i">{{ edu }}</li>
+    </ul>
+  </div>
+
+  <!-- Skills -->
+  <div class="summary-block" v-if="result.summary.skills?.length">
+    <h3>🛠️ Skills</h3>
+    <div class="skills">
+      <span v-for="(skill, i) in result.summary.skills" :key="i" class="skill-tag">{{ skill }}</span>
+    </div>
+  </div>
+
+  <!-- Experience -->
+  <div class="summary-block" v-if="result.summary.experience?.length">
+    <h3>💼 Experience</h3>
+    <ul>
+      <li v-for="(exp, i) in result.summary.experience" :key="i">{{ exp }}</li>
+    </ul>
+  </div>
+
+  <!-- Interests -->
+  <div class="summary-block" v-if="result.summary.interests?.length">
+    <h3>💡 Research Interests</h3>
+    <ul>
+      <li v-for="(interest, i) in result.summary.interests" :key="i">{{ interest }}</li>
+    </ul>
+  </div>
+
+  <!-- Publications -->
+  <div class="summary-block" v-if="result.summary.publications?.length">
+    <h3>📚 Publications</h3>
+    <ul>
+      <li v-for="(pub, i) in result.summary.publications" :key="i">{{ pub }}</li>
+    </ul>
+  </div>
+</div>
+
 
       <div v-if="result?.recommendations?.programs?.recommended_programs">
       <h2>🎯 Recommended Programs</h2>
@@ -111,5 +162,50 @@ button:disabled {
 .loading {
   margin: 20px 0;
   font-style: italic;
+}
+.summary-section {
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.summary-section h2 {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+  color: #1e293b;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 4px;
+}
+
+.summary-block {
+  margin-bottom: 20px;
+}
+
+.summary-block h3 {
+  font-size: 1.1rem;
+  color: #2563eb;
+  margin-bottom: 8px;
+}
+
+.summary-block ul {
+  list-style-type: "– ";
+  padding-left: 1rem;
+  color: #374151;
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.skill-tag {
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 </style>
