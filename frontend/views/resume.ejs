@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Resume Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  </head>
+  <body class="bg-gray-50 min-h-screen flex flex-col items-center py-8">
+    <h1 class="text-3xl font-bold mb-6">🎓 Resume Analyzer</h1>
+
+    <form action="/resume" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded p-6 w-1/2">
+      <label class="block mb-4 font-semibold text-gray-700">Upload your resume (PDF):</label>
+      <input type="file" name="resume" accept=".pdf" required class="border p-2 rounded w-full mb-4">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Analyze Resume
+      </button>
+    </form>
+
+    <% if (result) { %>
+      <div class="mt-8 w-3/4 bg-white shadow rounded p-6">
+        <% if (result.error) { %>
+          <p class="text-red-500 font-semibold"><%= result.error %></p>
+        <% } else { %>
+          <h2 class="text-xl font-bold mb-2">🧠 Field Detected:</h2>
+          <p class="text-lg mb-4"><%= result.summary?.field || "Unknown" %></p>
+
+          <% if (result.recommendations?.programs?.recommended_programs?.length) { %>
+            <h3 class="text-lg font-semibold mb-2">🎓 Recommended Graduate Programs:</h3>
+            <ul>
+              <% result.recommendations.programs.recommended_programs.forEach(p => { %>
+                <li class="border-b py-2">
+                  <a href="<%= p.link %>" target="_blank" class="text-blue-600 font-medium"><%= p.title %></a>
+                  <p class="text-sm text-gray-600"><%= p.snippet %></p>
+                </li>
+              <% }) %>
+            </ul>
+          <% } %>
+
+          <% if (result.recommendations?.faculty?.faculty_matches) { %>
+            <h3 class="text-lg font-semibold mt-6 mb-2">👩‍🏫 Matching Professors:</h3>
+            <pre class="text-sm text-gray-700 bg-gray-100 p-3 rounded"><%= JSON.stringify(result.recommendations.faculty.faculty_matches, null, 2) %></pre>
+
+            <% if (result.recommendations.faculty.links?.length) { %>
+              <h4 class="text-md font-semibold mt-3">📎 Faculty Pages:</h4>
+              <ul>
+                <% result.recommendations.faculty.links.forEach(l => { %>
+                  <li><a href="<%= l %>" target="_blank" class="text-blue-500 underline"><%= l %></a></li>
+                <% }) %>
+              </ul>
+            <% } %>
+          <% } %>
+        <% } %>
+      </div>
+    <% } %>
+  </body>
+</html>

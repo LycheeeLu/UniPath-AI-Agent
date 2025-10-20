@@ -7,6 +7,8 @@ import re
 from backend.services.s3_service import upload_file
 from backend.services.bedrock_service import call_bedrock
 from backend.agent.program_finder import find_programs
+from backend.agent.faculty_matcher import match_faculty
+
 
 
 
@@ -73,15 +75,11 @@ async def process_resume(file):
     else:
         text = str(summary_raw)
 
-    print("🧠DEBUG CLAUDE OUTPUT >>>", summary_raw)
     match = re.search(r"\{[\s\S]*\}", text)
     if match:
         cleaned = match.group(0)
     else:
         cleaned = text
-
-
-    print("🧹 Cleaned JSON text:", cleaned[:300])
 
     # deconstruct JSON
     try:
@@ -91,12 +89,12 @@ async def process_resume(file):
         print("RAW TEXT:\n", text[:500])
         summary = {"field": "general"}
 
-    print("🧠 cleaned", cleaned)
 
     field = summary.get("field", "general")
-    print("🧠 Detected field:", field)
 
     programs = find_programs(field)
+    first_uni = programs["recommended_programs"][0]["title"].split(":")[0]
+    faculty_data = match_faculty(field, first_uni)
 
 
 
@@ -106,5 +104,7 @@ async def process_resume(file):
         "file": file.filename,
         "s3_path": s3_path,
         "summary": summary,
-        "recommendations": programs
+        "recommendations": {
+            "programs": programs,
+            "faculty": faculty_data}
     }

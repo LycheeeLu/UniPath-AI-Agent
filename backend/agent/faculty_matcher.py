@@ -1,18 +1,47 @@
 from backend.services.bedrock_service import call_bedrock
-import requests
+import requests, os
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+load_dotenv()
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
 def match_faculty(field, university):
-    query = f"{university} {field} faculty profiles"
-    url = f"https://www.google.com/search?q={query}"
-    res = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
-    soup = BeautifulSoup(res.text, "html.parser")
-
-    links = [a["href"] for a in soup.find_all("a", href=True) if ".edu" in a["href"]][:5]
-    prompt = f"""
-    Based on the following faculty page URLs, identify professors whose research overlaps with {field}.
-    Return name, position, and research summary.
-    {links}
     """
+    Use Google Custom Search to find faculty pages for a given field and university,
+    then summarize potential research matches via Bedrock.
+    """
+    query = f"{university} {field} faculty OR professors site:.edu"
+
+    url = (
+        f"https://www.googleapis.com/customsearch/v1"
+        f"?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
+    )
+
+    res = requests.get(url)
+    data = res.json()
+
+    links = [item["link"] for item in data.get("items", [])[:5]]
+    if not links:
+        return {"faculty_matches": "No faculty pages found.", "links": []}
+
+    prompt = f"""
+    You are an expert academic matching assistant.
+    Based on the following faculty or department web pages, identify professors whose research overlaps with the field "{field}".
+    For each professor, return:
+    - name
+    - title/position
+    - main research topics (1 sentence)
+
+    Faculty pages:
+    {links}
+
+    Return results as a clean JSON list like:
+    [
+      {{"name": "...", "title": "...", "research": "..."}}
+    ]
+    """
+
     result = call_bedrock(prompt)
     return {"faculty_matches": result, "links": links}

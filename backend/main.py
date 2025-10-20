@@ -1,4 +1,6 @@
 from fastapi import FastAPI, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+
 from backend.agent.resume_processor import process_resume
 from backend.agent.program_finder import find_programs
 from backend.agent.requirement_parser import parse_requirements
@@ -6,6 +8,17 @@ from backend.agent.faculty_matcher import match_faculty
 from backend.agent.tracker import generate_tracker
 
 app = FastAPI()
+
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vue 默认端口
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/upload-resume")
 async def upload_resume(file: UploadFile):
