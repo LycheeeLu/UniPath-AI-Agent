@@ -106,7 +106,21 @@ async def process_resume(file):
 
     programs = find_programs(field)
     first_uni = programs["recommended_programs"][0]["title"].split(":")[0]
+
     faculty_data = match_faculty(field, first_uni)
+
+    faculty_raw = faculty_data.get("faculty_matches", "")
+    if isinstance(faculty_raw, str):
+        # remoму```json ... ```
+        faculty_raw = re.sub(r"```json|```", "", faculty_raw).strip()
+        try:
+            faculty_data["faculty_matches"] = json.loads(faculty_raw)
+        except json.JSONDecodeError:
+            print("⚠️ Faculty JSON parse failed, returning raw string.")
+
+    print("\n=== [DEBUG 🤔] match_faculty inputs ===")
+    print("\n=== [LOG]🤔 faculty_data ===\n", faculty_data)
+
 
 
 

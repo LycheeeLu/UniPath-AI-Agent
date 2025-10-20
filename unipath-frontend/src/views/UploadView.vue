@@ -18,6 +18,30 @@
         <a :href="p.link" target="_blank">View Program</a>
       </div>
     </div>
+
+            <h2>🔥 Faculty Matches </h2>
+      <div v-if="result.recommendations.faculty.faculty_matches">
+        <div v-for="(prof, i) in result.recommendations.faculty.faculty_matches" :key="i" class="program-card">
+          <h3>{{ prof.name }}</h3>
+          <p><strong>{{ prof.title }}</strong></p>
+          <p>{{ prof.research }}</p>
+        </div>
+      </div>
+         <!-- Faculty Links -->
+  <div
+    v-if="result.recommendations.faculty.links && result.recommendations.faculty.links.length"
+    class="faculty-links"
+  >
+    <h4>🔗 More Related Links</h4>
+    <ul>
+      <li
+        v-for="(url, i) in result.recommendations.faculty.links"
+        :key="i"
+      >
+        <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
+      </li>
+    </ul>
+  </div>
   </div>
 </template>
 

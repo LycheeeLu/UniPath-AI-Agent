@@ -28,8 +28,8 @@ def match_faculty(field, university):
 
     prompt = f"""
     You are an expert academic matching assistant.
-    Based on the following faculty or department web pages, identify professors whose research overlaps with the field "{field}".
-    For each professor, return:
+    Based on the following faculty or department web pages, identify professors from corresponding university whose research overlaps with the field "{field}".
+    For each professor (3 in total), return:
     - name
     - title/position
     - main research topics (1 sentence)
