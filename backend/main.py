@@ -1,5 +1,8 @@
 from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 from backend.agent.resume_processor import process_resume
 from backend.agent.program_finder import find_programs
@@ -13,7 +16,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vue 默认端口
+    allow_origins=["http://localhost:5173"],  # Vue
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,3 +46,10 @@ def tracker(user_id: str):
 @app.get("/")
 def home():
     return {"status": "UniPathAI backend is running"}
+
+app.mount("/", StaticFiles(directory="backend/static/dist"), name="static")
+
+@app.get("/")
+def serve_frontend():
+    index_path = os.path.join(" backend/static/dist", "index.html")
+    return FileResponse(index_path)
