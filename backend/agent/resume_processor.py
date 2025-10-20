@@ -48,12 +48,13 @@ async def process_resume(file):
 
     Rules:
     - Use double quotes for all keys and strings.
+    - Identify the applicant's **academic field or major** precisely (e.g., 'Psychology and Marketing' instead of 'general').
     - Do NOT include markdown formatting, comments, or text before/after JSON.
     - Only output valid JSON.
 
     Return JSON like this:
     {{
-    "field": "the applicant's main academic or professional field (e.g., Psychology, Computer Science, Economics, Marketing)",
+    "field": "Psychology, Computer Science, Economics/Marketing",
     "education": ["Bachelor of Science in Computer Science, NYU, 2023"],
     "skills": ["Python", "Machine Learning", "Data Analysis"],
     "experience": ["Research Assistant at XYZ Lab", "Software Engineer Intern at Google"],
@@ -69,11 +70,21 @@ async def process_resume(file):
     # let Bedrock extract resume text
     # for future optimization, we can use Textract OCR to extract texts
     summary_raw = call_bedrock(prompt)
+    text = summary_raw.strip()
+    print("=== [DEBUG Bedrock text output] ===\n", text)
 
-    if isinstance(summary_raw, dict) and "content" in summary_raw:
-        text = summary_raw["content"][0].get("text", "")
-    else:
-        text = str(summary_raw)
+    """     if isinstance(summary_raw, dict) and "content" in summary_raw:
+            text = summary_raw["content"][0].get("text", "")
+        elif "text" in summary_raw:
+            text = summary_raw["text"]
+        else:
+            text = str(summary_raw)
+    """
+
+    text = re.sub(r"^```json", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"^```", "", text)
+    text = re.sub(r"```$", "", text)
+    text = text.strip()
 
     match = re.search(r"\{[\s\S]*\}", text)
     if match:
@@ -84,10 +95,11 @@ async def process_resume(file):
     # deconstruct JSON
     try:
         summary = json.loads(cleaned)
+
     except json.JSONDecodeError as e:
         print("⚠️ JSONDecodeError:", e)
-        print("RAW TEXT:\n", text[:500])
-        summary = {"field": "general"}
+        print("RAW TEXT:\n", text[:2000])
+        summary = {"field": "what"}
 
 
     field = summary.get("field", "general")

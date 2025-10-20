@@ -24,7 +24,7 @@ def call_bedrock(prompt: str) -> str:
             "messages": [
                 {"role": "user", "content": prompt}
             ],
-            "max_tokens": 1000,
+            "max_tokens": 1500,
             "anthropic_version": "bedrock-2023-05-31"
         }
 
@@ -41,6 +41,12 @@ def call_bedrock(prompt: str) -> str:
     if "output" in out and "message" in out["output"]:
         text = out["output"]["message"]["content"][0]["text"]
         return text.strip()
+
+        # Claude 3.x format
+    if "content" in out and isinstance(out["content"], list):
+        for item in out["content"]:
+            if item.get("type") == "text":
+                return item.get("text", "").strip()
 
 
      # Otherwise, return raw response
