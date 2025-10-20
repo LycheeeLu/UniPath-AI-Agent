@@ -88,14 +88,8 @@ Frontend runs on:
 http://localhost:5173
 
 
-### 5. 🌐 API Endpoints
-Endpoint	Method	Description
-/upload-resume	POST	Upload and analyze a resume (PDF)
-/recommend-programs	GET	Find related graduate programs
-/parse-requirements	GET	Parse university program requirements
-/faculty-match	GET	Match professors based on research field
-/generate-tracker	GET	Generate user application tracker
-/	GET	Health check
+### 5. 🌐 demo video
+
 
 
 ### 6. 🧑‍💻 Development Notes
