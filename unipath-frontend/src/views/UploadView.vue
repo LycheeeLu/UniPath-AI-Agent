@@ -12,7 +12,7 @@
       <pre>{{ result.summary }}</pre> -->
       <!-- 🧠 Summary Section -->
 <div v-if="result?.summary" class="summary-section">
-  <h2>🧠 Applicant Background Summary</h2>
+  <h2>🧠 1. Applicant Background Summary</h2>
 
   <!-- Field -->
   <div class="summary-block">
@@ -62,19 +62,29 @@
 </div>
 
 
-      <div v-if="result?.recommendations?.programs?.recommended_programs">
-      <h2>🎯 Recommended Programs</h2>
+      <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
+      <h2>🎯2.  Recommended Programs</h2>
       <div v-for="(p, i) in result.recommendations.programs.recommended_programs" :key="i" class="program-card">
-        <h3>{{ p.title }}</h3>
+        <h3 >{{ p.title }}</h3>
         <p>{{ p.snippet }}</p>
         <a :href="p.link" target="_blank">View Program Official webpage</a>
       </div>
       </div>
     </div>
 
-    <div v-if="result?.recommendations?.programs?.recommended_programs">
-        <h2>🔥 Faculty Matches </h2>
-      <div v-if="result.recommendations.faculty.faculty_matches">
+    <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
+        <h2>🔥 3. Faculty Matches </h2>
+
+          <h4>🔗 verify Related Links</h4>
+    <ul class="summary-block" >
+      <li
+        v-for="(url, i) in result.recommendations.faculty.links"
+        :key="i"
+      >
+        <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
+      </li>
+    </ul>
+      <div v-if="result.recommendations.faculty.faculty_matches" class="summary-block">
         <div v-for="(prof, i) in result.recommendations.faculty.faculty_matches" :key="i" class="program-card">
           <h3>{{ prof.name }}</h3>
           <p><strong>{{ prof.title }}</strong></p>
@@ -86,15 +96,9 @@
     v-if="result.recommendations.faculty.links && result.recommendations.faculty.links.length"
     class="faculty-links"
   >
-    <h4>🔗 More Related Links</h4>
-    <ul>
-      <li
-        v-for="(url, i) in result.recommendations.faculty.links"
-        :key="i"
-      >
-        <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
-      </li>
-    </ul>
+
+
+
   </div>
   </div>
   </div>
