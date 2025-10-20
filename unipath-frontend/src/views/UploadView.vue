@@ -11,15 +11,18 @@
       <h2>🧠 Summary</h2>
       <pre>{{ result.summary }}</pre>
 
+      <div v-if="result?.recommendations?.programs?.recommended_programs">
       <h2>🎯 Recommended Programs</h2>
-      <div v-for="(p, i) in result.recommendations.recommended_programs" :key="i" class="program-card">
+      <div v-for="(p, i) in result.recommendations.programs.recommended_programs" :key="i" class="program-card">
         <h3>{{ p.title }}</h3>
         <p>{{ p.snippet }}</p>
-        <a :href="p.link" target="_blank">View Program</a>
+        <a :href="p.link" target="_blank">View Program Official webpage</a>
+      </div>
       </div>
     </div>
 
-            <h2>🔥 Faculty Matches </h2>
+    <div v-if="result?.recommendations?.programs?.recommended_programs">
+        <h2>🔥 Faculty Matches </h2>
       <div v-if="result.recommendations.faculty.faculty_matches">
         <div v-for="(prof, i) in result.recommendations.faculty.faculty_matches" :key="i" class="program-card">
           <h3>{{ prof.name }}</h3>
@@ -41,6 +44,7 @@
         <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
       </li>
     </ul>
+  </div>
   </div>
   </div>
 </template>

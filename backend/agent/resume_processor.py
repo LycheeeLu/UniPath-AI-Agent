@@ -118,7 +118,7 @@ async def process_resume(file):
         except json.JSONDecodeError:
             print("⚠️ Faculty JSON parse failed, returning raw string.")
 
-    print("\n=== [DEBUG 🤔] match_faculty inputs ===")
+    print("\n=== [DEBUG 🤔]", programs)
     print("\n=== [LOG]🤔 faculty_data ===\n", faculty_data)
 
 
