@@ -70,6 +70,8 @@ async def process_resume(file):
     # let Bedrock extract resume text
     # for future optimization, we can use Textract OCR to extract texts
     summary_raw = call_bedrock(prompt)
+
+
     text = summary_raw.strip()
     print("=== [DEBUG Bedrock text output] ===\n", text)
 

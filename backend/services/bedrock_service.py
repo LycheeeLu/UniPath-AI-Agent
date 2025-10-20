@@ -5,6 +5,7 @@ load_dotenv()
 region = os.getenv("AWS_REGION", "us-east-1")
 model_id = os.getenv("BEDROCK_MODEL_ID", "anthropic.claude-3-sonnet")
 
+print("🧠 Using model:", model_id)
 
 if os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_SECRET_ACCESS_KEY"):
     bedrock = boto3.client(

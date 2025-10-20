@@ -38,6 +38,7 @@ def match_faculty(field, university):
     {links}
 
     Return results as a clean JSON list like:
+    do not add anything extra else to ur response!!
     [
       {{"name": "...", "title": "...", "research": "..."}}
     ]
