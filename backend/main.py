@@ -9,11 +9,9 @@ from backend.agent.tracker import generate_tracker
 
 app = FastAPI()
 
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vue 默认端口
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,6 +28,7 @@ def find_programs(field: str):
 
 @app.get("/parse-requirements")
 def requirements(url: str):
+    print(f"🌐 Parsing requirements from {url}")
     return parse_requirements(url)
 
 @app.get("/faculty-match")
