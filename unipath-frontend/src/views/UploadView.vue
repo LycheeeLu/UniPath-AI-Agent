@@ -67,15 +67,9 @@
       <div v-for="(p, i) in result.recommendations.programs.recommended_programs" :key="i" class="program-card">
         <h3 >{{ p.title }}</h3>
         <p>{{ p.snippet }}</p>
-        <a :href="p.link" target="_blank">View Program Official webpage</a>
+        <a :href="p.link" target="_blank">More Program Related Links</a>
       </div>
-      </div>
-    </div>
-
-    <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
-        <h2>🔥 3. Faculty Matches </h2>
-
-          <h4>🔗 verify Related Links</h4>
+      <h4>🔗 verify Related Links</h4>
     <ul class="summary-block" >
       <li
         v-for="(url, i) in result.recommendations.faculty.links"
@@ -84,6 +78,13 @@
         <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
       </li>
     </ul>
+      </div>
+    </div>
+
+    <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
+        <h2>🔥 3. Faculty Matches </h2>
+
+
       <div v-if="result.recommendations.faculty.faculty_matches" class="summary-block">
         <div v-for="(prof, i) in result.recommendations.faculty.faculty_matches" :key="i" class="program-card">
           <h3>{{ prof.name }}</h3>
