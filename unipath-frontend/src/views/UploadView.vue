@@ -68,14 +68,12 @@
         <h3 >{{ p.title }}</h3>
         <p>{{ p.snippet }}</p>
         <a :href="p.link" target="_blank">View Program Official webpage</a>
+        <button @click="loadRequirements(p.link)">🔍 Show Requirements</button>
+          <div v-if="requirements[p.link]" class="requirements">
+          <pre>{{ requirements[p.link] }}</pre>
+        </div>
       </div>
-      </div>
-    </div>
-
-    <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
-        <h2>🔥 3. Faculty Matches </h2>
-
-          <h4>🔗 verify Related Links</h4>
+           <h4>🔗 More Program Related Links</h4>
     <ul class="summary-block" >
       <li
         v-for="(url, i) in result.recommendations.faculty.links"
@@ -84,6 +82,14 @@
         <a :href="url" target="_blank" rel="noopener noreferrer">{{ url }}</a>
       </li>
     </ul>
+      </div>
+
+    </div>
+
+    <div v-if="result?.recommendations?.programs?.recommended_programs" class="summary-section">
+        <h2>🔥 3. Faculty Matches </h2>
+
+
       <div v-if="result.recommendations.faculty.faculty_matches" class="summary-block">
         <div v-for="(prof, i) in result.recommendations.faculty.faculty_matches" :key="i" class="program-card">
           <h3>{{ prof.name }}</h3>
@@ -110,6 +116,15 @@ import { ref } from "vue";
 const file = ref(null);
 const result = ref(null);
 const loading = ref(false);
+
+
+const requirements = ref({});
+
+async function loadRequirements(url) {
+  if (requirements.value[url]) return; // cache
+  const res = await fetch(`http://127.0.0.1:8000/parse-requirements?url=${encodeURIComponent(url)}`);
+  requirements.value[url] = await res.json();
+}
 
 function onFileChange(e) {
   file.value = e.target.files[0];
