@@ -2,6 +2,11 @@
 
 UniPath AI Agent is an intelligent academic guidance system that helps students analyze their resumes, match them with suitable graduate programs, and discover relevant professors — all powered by **LLMs (AWS Bedrock + Anthropic Claude)** and a **FastAPI + Vue.js** tech stack.
 
+<img src="./images/example.jpg" alt="Example Image" width="400"/>
+<img src="./images/example2.png" alt="Example Image" width="400"/>
+<img src="./images/example3.png" alt="Example Image" width="400"/>
+
+
 ---
 
 ## 🚀 Features
@@ -42,6 +47,26 @@ UniPath AI Agent is an intelligent academic guidance system that helps students 
 ---
 
 ## ⚙️ Project Setup
+To test the UniPath AI demo:
+(if you want to test it out before January 2026 online)
+
+1️⃣ Go to the deployed site:
+🔗 https://unipath-app.gentlewave-56158528.westus2.azurecontainerapps.io
+
+2️⃣ Upload your resume (PDF).
+The backend will analyze it using AWS Bedrock (Claude 3.5 Sonnet) and return personalized academic program recommendations.
+
+⚠️ Important Notes:
+
+If you see a “500 Internal Server Error”, don’t panic.
+This usually means the AWS Bedrock Claude model is temporarily not responding or throttled — not a bug in this application.
+Just wait a few seconds and retry.
+
+All other routes (e.g. /recommend-programs, /faculty-match, /generate-tracker) are functional and handled via the FastAPI backend.
+
+CORS and S3 access are properly configured; errors only occur if the Bedrock API times out.
+
+to do it locally
 
 ### 1. Clone the repository
 ```bash
