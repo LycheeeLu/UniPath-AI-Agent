@@ -2,6 +2,7 @@
 
 UniPath AI Agent is an intelligent academic guidance system that helps students analyze their resumes, match them with suitable graduate programs, and discover relevant professors — all powered by **LLMs (AWS Bedrock + Anthropic Claude)** and a **FastAPI + Vue.js** tech stack.
 
+<img src="./images/startingPage.png" alt="Example Image" width="400"/>
 <img src="./images/example.jpg" alt="Example Image" width="400"/>
 <img src="./images/example2.png" alt="Example Image" width="400"/>
 <img src="./images/example3.png" alt="Example Image" width="400"/>
@@ -137,4 +138,3 @@ The frontend displays:
 - Faculty matches (if available)
 - Optionally, click on a program → parse its requirements in real time (checkout production branch)
 
-⏳ To be deployed full stack on AWS (API Gateway + EC2 + S3 + CloudFront)
