@@ -5,7 +5,7 @@
     <input type="file" @change="onFileChange" accept=".pdf" />
     <button :disabled="!file" @click="uploadResume">Upload</button>
 
-    <div v-if="loading" class="loading">⏳ Processing your resume...</div>
+    <div v-if="loading" class="loading">⏳ Processing your resume... Try your request later if there is no response from Claude inference model  </div>
 
     <div v-if="result">
 <!--       <h2>🧠 Summary</h2>
@@ -124,7 +124,7 @@ async function uploadResume() {
   formData.append("file", file.value);
 
   try {
-    const res = await fetch("http://127.0.0.1:8000/upload-resume", {
+    const res = await fetch("https://unipath-app.gentlewave-56158528.westus2.azurecontainerapps.io/upload-resume", {
       method: "POST",
       body: formData,
     });

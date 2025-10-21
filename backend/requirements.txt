@@ -8,3 +8,5 @@ pydantic
 lxml
 pydantic<2.0
 gunicorn
+PyMuPDF
+python-multipart

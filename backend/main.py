@@ -43,13 +43,13 @@ def faculty(field: str, university: str):
 def tracker(user_id: str):
     return generate_tracker(user_id)
 
-@app.get("/")
+""" @app.get("/")
 def home():
-    return {"status": "UniPathAI backend is running"}
+    return {"status": "UniPathAI backend is running"} """
 
-app.mount("/", StaticFiles(directory="backend/static/dist"), name="static")
+app.mount("/", StaticFiles(directory="backend/static/dist", html = True), name="static")
 
-@app.get("/")
+""" @app.get("/")
 def serve_frontend():
     index_path = os.path.join(" backend/static/dist", "index.html")
-    return FileResponse(index_path)
+    return FileResponse(index_path) """
